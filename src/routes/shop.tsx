@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import * as React from "react";
 import { ProductCard } from "@/components/ProductCard";
-import { products, type Category } from "@/lib/products";
+import { getDbProducts, type Category } from "@/lib/products";
 
 export const Route = createFileRoute("/shop")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -28,12 +28,22 @@ function Shop() {
   const { category, sort } = Route.useSearch();
   const navigate = Route.useNavigate();
 
+  const [currentProducts, setCurrentProducts] = React.useState(() => getDbProducts());
+
+  React.useEffect(() => {
+    const handleUpdate = () => {
+      setCurrentProducts(getDbProducts());
+    };
+    window.addEventListener("jb_products_updated", handleUpdate);
+    return () => window.removeEventListener("jb_products_updated", handleUpdate);
+  }, []);
+
   const filtered = React.useMemo(() => {
-    let list = category === "all" ? products : products.filter((p) => p.category === category);
+    let list = category === "all" ? currentProducts : currentProducts.filter((p) => p.category === category);
     if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
     return list;
-  }, [category, sort]);
+  }, [category, sort, currentProducts]);
 
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16 md:py-24">

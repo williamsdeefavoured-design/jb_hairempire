@@ -2,20 +2,45 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ProductCard } from "@/components/ProductCard";
 import { products } from "@/lib/products";
 import hero from "@/assets/hero.jpg";
-import collectionWigs from "@/assets/collection-wigs.jpg";
-import collectionEquipment from "@/assets/collection-equipment.jpg";
-import collectionTreatment from "@/assets/collection-treatment.jpg";
-import collectionNew from "@/assets/collection-new.jpg";
+import wig1 from "@/wigs/wig 1.jpg";
+import wig2 from "@/wigs/wig 2.jpg";
+import wig3 from "@/wigs/wig 3.jpg";
+import wig5 from "@/wigs/wig 5.jpg";
+import wig10 from "@/wigs/wig 10.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 const collections = [
-  { title: "New Arrivals", subtitle: "Fresh from the atelier", image: collectionNew, to: "/shop" },
-  { title: "Best Sellers", subtitle: "Loved by our community", image: collectionWigs, to: "/shop" },
-  { title: "Wigs", subtitle: "Hand-tied, undetectable", image: collectionWigs, to: "/shop" },
-  { title: "Hair Treatments", subtitle: "Daily ritual essentials", image: collectionTreatment, to: "/shop" },
+  { 
+    title: "New Arrivals", 
+    subtitle: "Fresh from the atelier", 
+    image: wig1, 
+    to: "/shop",
+    search: { category: "all", sort: "featured" } as const
+  },
+  { 
+    title: "Best Sellers", 
+    subtitle: "Loved by our community", 
+    image: wig2, 
+    to: "/shop",
+    search: { category: "wigs", sort: "featured" } as const
+  },
+  { 
+    title: "Wigs", 
+    subtitle: "Hand-tied, undetectable", 
+    image: wig3, 
+    to: "/shop",
+    search: { category: "wigs", sort: "featured" } as const
+  },
+  { 
+    title: "Hair Treatments", 
+    subtitle: "Daily ritual essentials", 
+    image: wig5, 
+    to: "/shop",
+    search: { category: "treatment", sort: "featured" } as const
+  },
 ];
 
 function Index() {
@@ -102,6 +127,7 @@ function Index() {
             <Link
               key={c.title}
               to={c.to}
+              search={c.search}
               className="group relative aspect-[3/4] overflow-hidden bg-cream hover-zoom"
             >
               <img src={c.image} alt={c.title} loading="lazy" className="w-full h-full object-cover" />
@@ -143,7 +169,7 @@ function Index() {
       <section className="bg-cream">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 md:py-32 grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="aspect-[4/5] overflow-hidden">
-            <img src={collectionEquipment} alt="Atelier" loading="lazy" className="w-full h-full object-cover" />
+            <img src={wig10} alt="Atelier" loading="lazy" className="w-full h-full object-cover" />
           </div>
           <div>
             <span className="text-[11px] uppercase tracking-[0.35em] text-muted-foreground">

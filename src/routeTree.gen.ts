@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TipsRouteImport } from './routes/tips'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ReviewsRouteImport } from './routes/reviews'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CollectionsRouteImport } from './routes/collections'
 import { Route as ChatRouteImport } from './routes/chat'
@@ -35,6 +36,11 @@ const ShopRoute = ShopRouteImport.update({
 const ReviewsRoute = ReviewsRouteImport.update({
   id: '/reviews',
   path: '/reviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/chat': typeof ChatRoute
   '/collections': typeof CollectionsRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
   '/reviews': typeof ReviewsRoute
   '/shop': typeof ShopRoute
   '/tips': typeof TipsRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatRoute
   '/collections': typeof CollectionsRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
   '/reviews': typeof ReviewsRoute
   '/shop': typeof ShopRoute
   '/tips': typeof TipsRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/chat': typeof ChatRoute
   '/collections': typeof CollectionsRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRoute
   '/reviews': typeof ReviewsRoute
   '/shop': typeof ShopRoute
   '/tips': typeof TipsRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/collections'
     | '/contact'
+    | '/dashboard'
     | '/reviews'
     | '/shop'
     | '/tips'
@@ -149,6 +159,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/collections'
     | '/contact'
+    | '/dashboard'
     | '/reviews'
     | '/shop'
     | '/tips'
@@ -163,6 +174,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/collections'
     | '/contact'
+    | '/dashboard'
     | '/reviews'
     | '/shop'
     | '/tips'
@@ -178,6 +190,7 @@ export interface RootRouteChildren {
   ChatRoute: typeof ChatRoute
   CollectionsRoute: typeof CollectionsRoute
   ContactRoute: typeof ContactRoute
+  DashboardRoute: typeof DashboardRoute
   ReviewsRoute: typeof ReviewsRoute
   ShopRoute: typeof ShopRoute
   TipsRoute: typeof TipsRoute
@@ -207,6 +220,13 @@ declare module '@tanstack/react-router' {
       path: '/reviews'
       fullPath: '/reviews'
       preLoaderRoute: typeof ReviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -282,6 +302,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRoute: ChatRoute,
   CollectionsRoute: CollectionsRoute,
   ContactRoute: ContactRoute,
+  DashboardRoute: DashboardRoute,
   ReviewsRoute: ReviewsRoute,
   ShopRoute: ShopRoute,
   TipsRoute: TipsRoute,

@@ -1,19 +1,16 @@
-import wig1 from "@/assets/wig-1.jpg";
-import wig2 from "@/assets/wig-2.jpg";
-import wig3 from "@/assets/wig-3.jpg";
-import wig4 from "@/assets/wig-4.jpg";
-import wig5 from "@/assets/wig-5.jpg";
-import wig6 from "@/assets/wig-6.jpg";
-import wig7 from "@/assets/wig-7.jpg";
-import wig8 from "@/assets/wig-8.jpg";
-import wig9 from "@/assets/wig-9.jpg";
-import wig10 from "@/assets/wig-10.jpg";
-import wig11 from "@/assets/wig-11.jpg";
-import wig12 from "@/assets/wig-12.jpg";
-import wig13 from "@/assets/wig-13.jpg";
-import wig14 from "@/assets/wig-14.jpg";
-import wig15 from "@/assets/wig-15.jpg";
-import wig16 from "@/assets/wig-16.jpg";
+import wig1 from "@/wigs/wig 1.jpg";
+import wig2 from "@/wigs/wig 2.jpg";
+import wig3 from "@/wigs/wig 3.jpg";
+import wig4 from "@/wigs/wig 4.jpg";
+import wig5 from "@/wigs/wig 5.jpg";
+import wig6 from "@/wigs/wig 6.jpg";
+import wig7 from "@/wigs/wig 7.jpg";
+import wig10 from "@/wigs/wig 10.jpg";
+import wig11 from "@/wigs/wig 11.jpg";
+import wig12 from "@/wigs/wig 12.jpg";
+import wig13 from "@/wigs/wig 13.jpg";
+import wig14 from "@/wigs/wig 14.jpg";
+import wig15 from "@/wigs/wig 15.jpg";
 import eq1 from "@/assets/equipment-1.jpg";
 import eq2 from "@/assets/equipment-2.jpg";
 import eq3 from "@/assets/equipment-3.jpg";
@@ -176,37 +173,6 @@ export const products: Product[] = [
     details: ["Silk straight", "Full fringe", "Density: 180%", "Length: 30 inches"],
   },
   {
-    id: "onyx-pixie-6",
-    name: "Onyx Pixie Cut 6\"",
-    price: 526400,
-    image: wig8,
-    category: "wigs",
-    badge: "New",
-    length: 6,
-    texture: "Pixie Cut",
-    rating: 4.7,
-    reviews: 64,
-    description:
-      "A daring jet black pixie. Tapered nape and textured crown for instant attitude.",
-    details: ["Tapered cut", "Lightweight cap", "Density: 150%", "Length: 6 inches"],
-  },
-
-  {
-    id: "jet-black-bone-straight-32",
-    name: "Jet Black Bone Straight 32\"",
-    price: 1054400,
-    image: wig9,
-    category: "wigs",
-    badge: "New",
-    length: 32,
-    texture: "Bone Straight",
-    rating: 4.9,
-    reviews: 178,
-    description:
-      "Mirror-smooth bone straight in deep jet black. Cuticle-aligned for glassy, weightless movement.",
-    details: ["Raw virgin hair", "HD lace 13x6", "Density: 200%", "Length: 32 inches"],
-  },
-  {
     id: "water-wave-26",
     name: "Brazilian Water Wave 26\"",
     price: 830400,
@@ -293,21 +259,6 @@ export const products: Product[] = [
     description:
       "Dark roots melting into warm caramel honey ends. Hand-painted balayage with luminous shine.",
     details: ["Hand-painted balayage", "HD lace 13x4", "Density: 200%", "Length: 28 inches"],
-  },
-  {
-    id: "knotless-box-braids-36",
-    name: "Knotless Box Braids 36\"",
-    price: 622400,
-    image: wig16,
-    category: "wigs",
-    badge: "Bestseller",
-    length: 36,
-    texture: "Knotless Box Braids",
-    rating: 4.9,
-    reviews: 312,
-    description:
-      "Full-length knotless box braids on a soft, breathable cap. Ready-to-wear protective glamour.",
-    details: ["Pre-braided full lace", "Lightweight cap", "Adjustable straps", "Length: 36 inches"],
   },
 
   // ===================== EQUIPMENT =====================
@@ -493,6 +444,30 @@ export const collections = [
   { slug: "treatment", title: "Hair Treatment", image: "/src/assets/collection-treatment.jpg" },
 ];
 
-export function getProduct(id: string) {
-  return products.find((p) => p.id === id);
+export function getDbProducts(): Product[] {
+  if (typeof window !== "undefined") {
+    const stored = localStorage.getItem("jb_products_v2");
+    if (stored) {
+      try {
+        return JSON.parse(stored) as Product[];
+      } catch (e) {
+        console.error("Failed to parse stored products", e);
+      }
+    } else {
+      localStorage.setItem("jb_products_v2", JSON.stringify(products));
+    }
+  }
+  return products;
 }
+
+export function saveDbProducts(newProducts: Product[]) {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("jb_products_v2", JSON.stringify(newProducts));
+    window.dispatchEvent(new Event("jb_products_updated"));
+  }
+}
+
+export function getProduct(id: string) {
+  return getDbProducts().find((p) => p.id === id);
+}
+

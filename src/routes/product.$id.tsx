@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import * as React from "react";
 import { Minus, Plus, Truck, Shield, Heart, Star } from "lucide-react";
-import { getProduct, products, formatNGN } from "@/lib/products";
+import { getProduct, getDbProducts, formatNGN } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 import { ProductCard } from "@/components/ProductCard";
 
@@ -36,11 +36,30 @@ export const Route = createFileRoute("/product/$id")({
 });
 
 function ProductPage() {
-  const { product } = Route.useLoaderData();
+  const { product: initialProduct } = Route.useLoaderData();
+  const { id } = Route.useParams();
   const { add } = useCart();
   const [qty, setQty] = React.useState(1);
 
-  const related = products.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 3);
+  const [product, setProduct] = React.useState(initialProduct);
+  const [allProducts, setAllProducts] = React.useState(() => getDbProducts());
+
+  React.useEffect(() => {
+    setProduct(getProduct(id) || initialProduct);
+  }, [id, initialProduct]);
+
+  React.useEffect(() => {
+    const handleUpdate = () => {
+      setProduct(getProduct(id) || initialProduct);
+      setAllProducts(getDbProducts());
+    };
+    window.addEventListener("jb_products_updated", handleUpdate);
+    return () => window.removeEventListener("jb_products_updated", handleUpdate);
+  }, [id, initialProduct]);
+
+  const related = React.useMemo(() => {
+    return allProducts.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 3);
+  }, [product, allProducts]);
 
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-10 py-12 md:py-16">
