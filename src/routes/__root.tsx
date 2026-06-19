@@ -10,10 +10,14 @@ import {
 
 import appCss from "../styles.css?url";
 import { CartProvider } from "@/lib/cart";
+import { WishlistProvider } from "@/lib/wishlist";
+import { AuthProvider } from "@/lib/auth";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { ChatWidget } from "@/components/ChatWidget";
+import { AuthModal } from "@/components/AuthModal";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -108,17 +112,23 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
-          <main className="flex-1 pt-20">
-            <Outlet />
-          </main>
-          <Footer />
-          <CartDrawer />
-          <ChatWidget />
-        </div>
-      </CartProvider>
+      <AuthProvider>
+        <WishlistProvider>
+          <CartProvider>
+            <div className="min-h-screen flex flex-col">
+              <Navbar />
+              <main className="flex-1 pt-20">
+                <Outlet />
+              </main>
+              <Footer />
+              <CartDrawer />
+              <ChatWidget />
+              <AuthModal />
+              <Toaster />
+            </div>
+          </CartProvider>
+        </WishlistProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

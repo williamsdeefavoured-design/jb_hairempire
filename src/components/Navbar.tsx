@@ -1,7 +1,9 @@
 import * as React from "react";
-import { Link } from "@tanstack/react-router";
-import { ShoppingBag, Search, Heart, Menu, X } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { ShoppingBag, Search, Heart, Menu, X, UserCircle2 } from "lucide-react";
 import { useCart } from "@/lib/cart";
+import { useAuth } from "@/lib/auth";
+import { useWishlist } from "@/lib/wishlist";
 
 const links = [
   { to: "/", label: "Home" },
@@ -16,8 +18,24 @@ const links = [
 
 export function Navbar() {
   const { count, setOpen } = useCart();
+  const { user, openAuthModal } = useAuth();
+  const { count: wishlistCount } = useWishlist();
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    setSearchOpen(false);
+    navigate({
+      to: "/shop",
+      search: { category: "all", sort: "featured", search: searchQuery.trim() },
+    });
+    setSearchQuery("");
+  };
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -79,14 +97,32 @@ export function Navbar() {
                 </Link>
               ))}
             </nav>
-            <button aria-label="Search" className="hover:text-foreground transition-colors">
+            <button
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+              className="hover:text-foreground transition-colors cursor-pointer"
+            >
               <Search className="h-4.5 w-4.5" />
             </button>
-            <button
+            <Link
+              to="/wishlist"
               aria-label="Wishlist"
-              className="hover:text-foreground transition-colors hidden sm:block"
+              className="relative hover:text-foreground transition-colors hidden sm:block"
             >
               <Heart className="h-4.5 w-4.5" />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-foreground text-background text-[10px] rounded-full h-4 min-w-4 px-1 flex items-center justify-center">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+            <button
+              onClick={() => openAuthModal("login")}
+              aria-label={user ? "My account" : "Sign in"}
+              className="navbar-user-btn hover:text-foreground"
+            >
+              <UserCircle2 className="h-4.5 w-4.5" />
+              {user && <span className="navbar-user-dot" />}
             </button>
             <button
               onClick={() => setOpen(true)}
@@ -130,6 +166,56 @@ export function Navbar() {
                 </Link>
               ))}
             </nav>
+            <div className="mt-auto pt-6 border-t border-border/60">
+              <button
+                onClick={() => {
+                  setMobileOpen(false);
+                  openAuthModal("login");
+                }}
+                className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] text-foreground/80 hover:text-foreground transition-colors cursor-pointer w-full text-left"
+              >
+                <div className="relative flex items-center justify-center">
+                  <UserCircle2 className="h-5 w-5" />
+                  {user && <span className="navbar-user-dot" />}
+                </div>
+                <span>{user ? "My Account" : "Sign In / Register"}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Search Overlay */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-md transition-all duration-300">
+          <button
+            onClick={() => setSearchOpen(false)}
+            className="absolute top-6 right-6 p-2 text-foreground/75 hover:text-foreground transition-colors cursor-pointer"
+            aria-label="Close search"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <div className="w-full max-w-2xl px-6">
+            <form onSubmit={handleSearchSubmit} className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search products, wigs, collections..."
+                autoFocus
+                className="w-full bg-transparent border-b-2 border-border/80 focus:border-foreground py-4 text-2xl font-display outline-none transition-colors pr-10"
+              />
+              <button
+                type="submit"
+                className="absolute right-0 top-1/2 -translate-y-1/2 p-2 hover:scale-110 transition-transform cursor-pointer"
+                aria-label="Submit search"
+              >
+                <Search className="h-6 w-6" />
+              </button>
+            </form>
+            <p className="mt-4 text-xs uppercase tracking-[0.25em] text-muted-foreground text-center animate-pulse">
+              Press Enter to search
+            </p>
           </div>
         </div>
       )}

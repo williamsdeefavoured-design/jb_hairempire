@@ -11,7 +11,7 @@ JB HAIRMPIRE offers:
 - Salon-grade hair styling equipment
 - Worldwide shipping
 
-Help customers with: choosing the right wig (texture, length, color), hair care advice, product recommendations, order questions, and styling tips. Be concise (2–4 short paragraphs), elegant, and friendly. Use a refined tone. For order tracking or account-specific issues, suggest contacting +234 704 489 1890 or emailing the boutique.`;
+Help customers with: choosing the right wig (texture, length, color), hair care advice, product recommendations, order questions, and styling tips. Be concise (2–4 short paragraphs), elegant, and friendly. Use a refined tone. For order tracking or account-specific issues, suggest contacting +234 704 489 1890 or emailing the boutique at jbhairmpire@gmail.com.`;
 
 export const Route = createFileRoute("/api/chat")({
   server: {

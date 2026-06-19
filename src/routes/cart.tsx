@@ -2,6 +2,7 @@ import * as React from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Minus, Plus, Trash2, CheckCircle2 } from "lucide-react";
 import { useCart } from "@/lib/cart";
+import { useAuth } from "@/lib/auth";
 import { formatNGN } from "@/lib/products";
 
 const PAYSTACK_PUBLIC_KEY = "pk_live_3a5912096e3e68022aab31756690a2f67378145e";
@@ -63,11 +64,18 @@ export const Route = createFileRoute("/cart")({
 
 function CartPage() {
   const { items, update, remove, subtotal, clear } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = React.useState("");
+  const [email, setEmail] = React.useState(user?.email || "");
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [success, setSuccess] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (user?.email) {
+      setEmail(user.email);
+    }
+  }, [user]);
 
   const shipping = subtotal > 0 ? 7500 : 0;
   const total = subtotal + shipping;

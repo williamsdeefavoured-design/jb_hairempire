@@ -3,6 +3,8 @@ import { Heart, Star } from "lucide-react";
 import { type Product, formatNGN } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 
+import { useWishlist } from "@/lib/wishlist";
+
 function Stars({ rating }: { rating: number }) {
   const full = Math.floor(rating);
   const half = rating - full >= 0.5;
@@ -24,6 +26,8 @@ function Stars({ rating }: { rating: number }) {
 
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
+  const { toggle, has } = useWishlist();
+  const isFav = has(product.id);
 
   return (
     <div className="group">
@@ -39,16 +43,19 @@ export function ProductCard({ product }: { product: Product }) {
           className="w-full h-full object-cover"
         />
         {product.badge && (
-          <span className="absolute top-4 left-4 bg-background/90 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-[0.2em]">
+          <span className="absolute top-4 left-4 bg-background/90 backdrop-blur px-3 py-1 text-[10px] uppercase tracking-[0.25em]">
             {product.badge}
           </span>
         )}
         <button
-          aria-label="Wishlist"
+          aria-label={isFav ? "Remove from wishlist" : "Add to wishlist"}
           className="absolute top-4 right-4 h-9 w-9 rounded-full bg-background/90 backdrop-blur grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity"
-          onClick={(e) => e.preventDefault()}
+          onClick={(e) => {
+            e.preventDefault();
+            toggle(product);
+          }}
         >
-          <Heart className="h-4 w-4" />
+          <Heart className={`h-4 w-4 ${isFav ? "fill-gold text-gold" : ""}`} />
         </button>
         <button
           onClick={(e) => {

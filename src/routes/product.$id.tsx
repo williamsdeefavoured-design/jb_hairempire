@@ -3,6 +3,7 @@ import * as React from "react";
 import { Minus, Plus, Truck, Shield, Heart, Star } from "lucide-react";
 import { getProduct, getDbProducts, formatNGN } from "@/lib/products";
 import { useCart } from "@/lib/cart";
+import { useWishlist } from "@/lib/wishlist";
 import { ProductCard } from "@/components/ProductCard";
 
 export const Route = createFileRoute("/product/$id")({
@@ -39,6 +40,8 @@ function ProductPage() {
   const { product: initialProduct } = Route.useLoaderData();
   const { id } = Route.useParams();
   const { add } = useCart();
+  const { toggle, has } = useWishlist();
+  const isFav = has(id);
   const [qty, setQty] = React.useState(1);
 
   const [product, setProduct] = React.useState(initialProduct);
@@ -141,8 +144,12 @@ function ProductPage() {
             >
               Add to bag — {formatNGN(product.price * qty)}
             </button>
-            <button className="border border-border px-4 hover:bg-cream" aria-label="Wishlist">
-              <Heart className="h-4 w-4" />
+            <button
+              onClick={() => toggle(product)}
+              className="border border-border px-4 hover:bg-cream flex items-center justify-center transition-colors cursor-pointer"
+              aria-label={isFav ? "Remove from wishlist" : "Add to wishlist"}
+            >
+              <Heart className={`h-4 w-4 ${isFav ? "fill-gold text-gold" : ""}`} />
             </button>
           </div>
 

@@ -7,6 +7,7 @@ export const Route = createFileRoute("/shop")({
   validateSearch: (search: Record<string, unknown>) => ({
     category: (search.category as Category | "all" | undefined) ?? "all",
     sort: (search.sort as "featured" | "price-asc" | "price-desc" | undefined) ?? "featured",
+    search: (search.search as string | undefined) ?? "",
   }),
   head: () => ({
     meta: [
@@ -25,7 +26,7 @@ const filters: { value: Category | "all"; label: string }[] = [
 ];
 
 function Shop() {
-  const { category, sort } = Route.useSearch();
+  const { category, sort, search } = Route.useSearch();
   const navigate = Route.useNavigate();
 
   const [currentProducts, setCurrentProducts] = React.useState(() => getDbProducts());
@@ -40,19 +41,38 @@ function Shop() {
 
   const filtered = React.useMemo(() => {
     let list = category === "all" ? currentProducts : currentProducts.filter((p) => p.category === category);
+    if (search && search.trim()) {
+      const q = search.toLowerCase().trim();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q) ||
+          p.description?.toLowerCase().includes(q)
+      );
+    }
     if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
     return list;
-  }, [category, sort, currentProducts]);
+  }, [category, sort, search, currentProducts]);
 
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16 md:py-24">
       <div className="text-center mb-12">
         <span className="text-[11px] uppercase tracking-[0.35em] text-muted-foreground">
-          The Boutique
+          {search ? "Search Results" : "The Boutique"}
         </span>
-        <h1 className="mt-3 font-display text-5xl md:text-6xl">Shop</h1>
+        <h1 className="mt-3 font-display text-5xl md:text-6xl">
+          {search ? `"${search}"` : "Shop"}
+        </h1>
         <div className="gold-line w-24 mx-auto mt-6" />
+        {search && (
+          <button
+            onClick={() => navigate({ search: { category: "all", sort: "featured", search: "" } })}
+            className="mt-4 text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground underline underline-offset-4 cursor-pointer"
+          >
+            Clear Search
+          </button>
+        )}
       </div>
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12 border-y border-border/60 py-5">
@@ -60,7 +80,7 @@ function Shop() {
           {filters.map((f) => (
             <button
               key={f.value}
-              onClick={() => navigate({ search: { category: f.value, sort } })}
+              onClick={() => navigate({ search: { category: f.value, sort, search } })}
               className={`px-4 py-2 text-xs uppercase tracking-[0.2em] transition-colors ${
                 category === f.value
                   ? "bg-foreground text-background"
@@ -77,7 +97,7 @@ function Shop() {
             value={sort}
             onChange={(e) =>
               navigate({
-                search: { category, sort: e.target.value as "featured" | "price-asc" | "price-desc" },
+                search: { category, sort: e.target.value as "featured" | "price-asc" | "price-desc", search },
               })
             }
             className="bg-transparent border-b border-border py-1 outline-none"

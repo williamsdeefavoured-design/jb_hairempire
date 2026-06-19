@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
+import * as React from "react";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -12,6 +13,21 @@ export const Route = createFileRoute("/contact")({
 });
 
 function Contact() {
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [subject, setSubject] = React.useState("");
+  const [message, setMessage] = React.useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || !subject.trim() || !message.trim()) return;
+
+    const formattedText = `Hi, I am ${name} (${email}).\n\nSubject: ${subject}\n\nMessage: ${message}`;
+    const encoded = encodeURIComponent(formattedText);
+    const whatsappUrl = `https://wa.me/2347044891890?text=${encoded}`;
+    window.open(whatsappUrl, "_blank");
+  };
+
   return (
     <div className="mx-auto max-w-6xl px-6 lg:px-10 py-24 md:py-32">
       <div className="text-center mb-16">
@@ -24,32 +40,56 @@ function Contact() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-12 lg:gap-20">
-        <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-          {[
-            { l: "Name", t: "text" },
-            { l: "Email", t: "email" },
-            { l: "Subject", t: "text" },
-          ].map((f) => (
-            <div key={f.l}>
-              <label className="block text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-2">
-                {f.l}
-              </label>
-              <input
-                type={f.t}
-                className="w-full bg-transparent border-b border-border py-3 text-sm outline-none focus:border-foreground transition-colors"
-              />
-            </div>
-          ))}
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          <div>
+            <label className="block text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-2">
+              Name
+            </label>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full bg-transparent border-b border-border py-3 text-sm outline-none focus:border-foreground transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-transparent border-b border-border py-3 text-sm outline-none focus:border-foreground transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-2">
+              Subject
+            </label>
+            <input
+              type="text"
+              required
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              className="w-full bg-transparent border-b border-border py-3 text-sm outline-none focus:border-foreground transition-colors"
+            />
+          </div>
           <div>
             <label className="block text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-2">
               Message
             </label>
             <textarea
               rows={5}
+              required
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               className="w-full bg-transparent border-b border-border py-3 text-sm outline-none focus:border-foreground transition-colors resize-none"
             />
           </div>
-          <button className="bg-foreground text-background px-10 py-4 text-xs uppercase tracking-[0.25em] hover:bg-foreground/90 transition-colors">
+          <button type="submit" className="bg-foreground text-background px-10 py-4 text-xs uppercase tracking-[0.25em] hover:bg-foreground/90 transition-colors cursor-pointer">
             Send message
           </button>
         </form>

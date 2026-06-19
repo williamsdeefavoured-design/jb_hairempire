@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as TipsRouteImport } from './routes/tips'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ReviewsRouteImport } from './routes/reviews'
@@ -23,6 +24,11 @@ import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ApiPaystackVerifyRouteImport } from './routes/api/paystack-verify'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 
+const WishlistRoute = WishlistRouteImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TipsRoute = TipsRouteImport.update({
   id: '/tips',
   path: '/tips',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/reviews': typeof ReviewsRoute
   '/shop': typeof ShopRoute
   '/tips': typeof TipsRoute
+  '/wishlist': typeof WishlistRoute
   '/api/chat': typeof ApiChatRoute
   '/api/paystack-verify': typeof ApiPaystackVerifyRoute
   '/product/$id': typeof ProductIdRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/reviews': typeof ReviewsRoute
   '/shop': typeof ShopRoute
   '/tips': typeof TipsRoute
+  '/wishlist': typeof WishlistRoute
   '/api/chat': typeof ApiChatRoute
   '/api/paystack-verify': typeof ApiPaystackVerifyRoute
   '/product/$id': typeof ProductIdRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/reviews': typeof ReviewsRoute
   '/shop': typeof ShopRoute
   '/tips': typeof TipsRoute
+  '/wishlist': typeof WishlistRoute
   '/api/chat': typeof ApiChatRoute
   '/api/paystack-verify': typeof ApiPaystackVerifyRoute
   '/product/$id': typeof ProductIdRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/reviews'
     | '/shop'
     | '/tips'
+    | '/wishlist'
     | '/api/chat'
     | '/api/paystack-verify'
     | '/product/$id'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/reviews'
     | '/shop'
     | '/tips'
+    | '/wishlist'
     | '/api/chat'
     | '/api/paystack-verify'
     | '/product/$id'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/reviews'
     | '/shop'
     | '/tips'
+    | '/wishlist'
     | '/api/chat'
     | '/api/paystack-verify'
     | '/product/$id'
@@ -194,6 +206,7 @@ export interface RootRouteChildren {
   ReviewsRoute: typeof ReviewsRoute
   ShopRoute: typeof ShopRoute
   TipsRoute: typeof TipsRoute
+  WishlistRoute: typeof WishlistRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiPaystackVerifyRoute: typeof ApiPaystackVerifyRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -201,6 +214,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wishlist': {
+      id: '/wishlist'
+      path: '/wishlist'
+      fullPath: '/wishlist'
+      preLoaderRoute: typeof WishlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tips': {
       id: '/tips'
       path: '/tips'
@@ -306,6 +326,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReviewsRoute: ReviewsRoute,
   ShopRoute: ShopRoute,
   TipsRoute: TipsRoute,
+  WishlistRoute: WishlistRoute,
   ApiChatRoute: ApiChatRoute,
   ApiPaystackVerifyRoute: ApiPaystackVerifyRoute,
   ProductIdRoute: ProductIdRoute,

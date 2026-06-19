@@ -1,6 +1,9 @@
 import * as React from "react";
 import type { Product } from "./products";
 
+import { useAuth } from "./auth";
+import { toast } from "sonner";
+
 export interface CartItem {
   product: Product;
   quantity: number;
@@ -23,8 +26,14 @@ const CartContext = React.createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = React.useState<CartItem[]>([]);
   const [open, setOpen] = React.useState(false);
+  const { user, openAuthModal } = useAuth();
 
   const add = (product: Product, qty = 1) => {
+    if (!user) {
+      toast.error("Please sign in or register to add items to bag and purchase.");
+      openAuthModal("login");
+      return;
+    }
     setItems((prev) => {
       const existing = prev.find((i) => i.product.id === product.id);
       if (existing) {

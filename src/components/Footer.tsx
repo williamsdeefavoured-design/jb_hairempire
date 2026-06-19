@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { Instagram, Facebook, Youtube } from "lucide-react";
 
@@ -13,19 +14,6 @@ export function Footer() {
               styling tools and elevated treatments — designed for women who
               expect more.
             </p>
-            <form
-              className="mt-8 flex max-w-md border border-border bg-background"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <input
-                type="email"
-                placeholder="Your email"
-                className="flex-1 px-4 py-3 bg-transparent text-sm placeholder:text-muted-foreground outline-none"
-              />
-              <button className="px-5 text-xs uppercase tracking-[0.2em] bg-foreground text-background hover:bg-foreground/90 transition-colors">
-                Join
-              </button>
-            </form>
           </div>
 
           <div>
