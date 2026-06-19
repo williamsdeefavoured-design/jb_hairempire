@@ -4,7 +4,7 @@ export const Route = createFileRoute("/api/paystack-verify")({
   // @ts-expect-error – TanStack Start adds `server.handlers` at runtime; types lag behind
   server: {
     handlers: {
-      POST: async ({ request }) => {
+      POST: async ({ request }: { request: Request }) => {
         try {
           const { reference, expectedAmount, expectedCurrency } =
             (await request.json()) as {
