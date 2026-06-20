@@ -44,47 +44,76 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close drawer on Escape key
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setMobileOpen(false); setSearchOpen(false); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Lock body scroll when drawer is open
+  React.useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
   return (
+    <>
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
         scrolled ? "bg-background/85 backdrop-blur-md border-b border-border/60" : "bg-transparent"
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-10">
-        <div className="grid grid-cols-3 items-center h-20">
-          {/* left: nav */}
-          <nav className="hidden lg:flex items-center gap-8 text-[13px] uppercase tracking-[0.18em] text-foreground/80">
-            {links.slice(0, 4).map((l) => (
-              <Link
-                key={l.to}
-                to={l.to}
-                className="hover:text-foreground transition-colors"
-                activeProps={{ className: "text-foreground" }}
+        {/* Use relative + flex so the brand name can be absolutely centered */}
+        <div className="relative flex items-center justify-between h-20">
+
+          {/* left: hamburger (mobile) or desktop nav */}
+          <div className="flex items-center">
+            <button
+              className="lg:hidden p-2 -ml-2"
+              onClick={() => setMobileOpen((o) => !o)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+            >
+              <span
+                style={{
+                  display: "inline-block",
+                  transition: "transform 0.25s ease",
+                  transform: mobileOpen ? "rotate(90deg)" : "rotate(0deg)",
+                }}
               >
-                {l.label}
-              </Link>
-            ))}
-          </nav>
+                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </span>
+            </button>
+            <nav className="hidden lg:flex items-center gap-8 text-[13px] uppercase tracking-[0.18em] text-foreground/80">
+              {links.slice(0, 4).map((l) => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  className="hover:text-foreground transition-colors"
+                  activeProps={{ className: "text-foreground" }}
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
-          {/* mobile menu button */}
-          <button
-            className="lg:hidden justify-self-start p-2 -ml-2"
-            onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
+          {/* center: absolutely centered brand name — never competes for space */}
+          <Link
+            to="/"
+            className="absolute left-1/2 -translate-x-1/2 pointer-events-auto"
           >
-            <Menu className="h-5 w-5" />
-          </button>
-
-          {/* center logo */}
-          <Link to="/" className="justify-self-center flex items-center gap-3">
-            <img src="/jb-logo.svg" alt="JB" className="h-10 w-10" />
-            <span className="font-display text-2xl md:text-[28px] tracking-[0.18em] font-semibold">
+            <span className="font-display text-[16px] sm:text-2xl md:text-[28px] tracking-[0.15em] sm:tracking-[0.18em] font-semibold whitespace-nowrap">
               JB HAIRMPIRE
             </span>
           </Link>
 
-          {/* right */}
-          <div className="flex items-center justify-end gap-5 text-foreground/80">
+          {/* right: icons */}
+          <div className="flex items-center gap-3 sm:gap-5 text-foreground/80">
             <nav className="hidden lg:flex items-center gap-8 mr-2 text-[13px] uppercase tracking-[0.18em]">
               {links.slice(4).map((l) => (
                 <Link
@@ -140,54 +169,88 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* mobile drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div
-            className="absolute inset-0 bg-foreground/30 backdrop-blur-sm"
-            onClick={() => setMobileOpen(false)}
-          />
-          <div className="absolute left-0 top-0 h-full w-[82%] max-w-sm bg-background p-8 shadow-2xl flex flex-col">
-            <div className="flex items-center justify-between mb-10">
-              <span className="font-display tracking-[0.3em] text-lg">JB HAIRMPIRE</span>
-              <button onClick={() => setMobileOpen(false)} aria-label="Close">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <nav className="flex flex-col gap-5 text-lg uppercase tracking-[0.2em]">
-              {links.map((l) => (
-                <Link
-                  key={l.to}
-                  to={l.to}
-                  onClick={() => setMobileOpen(false)}
-                  className="text-foreground/80 hover:text-foreground"
-                >
-                  {l.label}
-                </Link>
-              ))}
-            </nav>
-            <div className="mt-auto pt-6 border-t border-border/60">
-              <button
-                onClick={() => {
-                  setMobileOpen(false);
-                  openAuthModal("login");
+    </header>
+
+      {/* ── Mobile Drawer — rendered OUTSIDE <header> so its z-index is not capped ── */}
+      <div
+        className="fixed inset-0 z-[9999] lg:hidden"
+        style={{ pointerEvents: mobileOpen ? "auto" : "none" }}
+        aria-hidden={!mobileOpen}
+      >
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0 bg-foreground/35 backdrop-blur-sm"
+          style={{ transition: "opacity 0.3s ease", opacity: mobileOpen ? 1 : 0 }}
+          onClick={() => setMobileOpen(false)}
+        />
+
+        {/* Panel */}
+        <div
+          className="absolute left-0 top-0 h-full w-[82%] max-w-xs bg-background shadow-2xl flex flex-col"
+          style={{
+            transition: "transform 0.35s cubic-bezier(.2,.7,.2,1)",
+            transform: mobileOpen ? "translateX(0)" : "translateX(-100%)",
+          }}
+        >
+          {/* Drawer header */}
+          <div className="flex items-center justify-between px-7 py-6 border-b border-border/50">
+            <span className="font-display tracking-[0.25em] text-base font-semibold">MENU</span>
+            <button
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close menu"
+              className="p-1.5 rounded-full hover:bg-muted transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Nav links with staggered entrance */}
+          <nav className="flex flex-col px-7 py-6 gap-1 flex-1 overflow-y-auto">
+            {links.map((l, i) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                onClick={() => setMobileOpen(false)}
+                className="nav-mobile-link"
+                activeProps={{ className: "nav-mobile-link nav-mobile-link--active" }}
+                style={{
+                  opacity: mobileOpen ? 1 : 0,
+                  transform: mobileOpen ? "translateX(0)" : "translateX(-14px)",
+                  transition: `opacity 0.35s ease ${60 + i * 40}ms, transform 0.35s ease ${60 + i * 40}ms`,
                 }}
-                className="flex items-center gap-3 text-sm uppercase tracking-[0.2em] text-foreground/80 hover:text-foreground transition-colors cursor-pointer w-full text-left"
               >
-                <div className="relative flex items-center justify-center">
-                  <UserCircle2 className="h-5 w-5" />
-                  {user && <span className="navbar-user-dot" />}
-                </div>
-                <span>{user ? "My Account" : "Sign In / Register"}</span>
-              </button>
-            </div>
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Footer */}
+          <div className="px-7 py-6 border-t border-border/50 flex flex-col gap-4">
+            <Link
+              to="/wishlist"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-3 text-sm uppercase tracking-[0.18em] text-foreground/75 hover:text-foreground transition-colors"
+            >
+              <Heart className="h-4.5 w-4.5" />
+              <span>Wishlist {wishlistCount > 0 ? `(${wishlistCount})` : ""}</span>
+            </Link>
+            <button
+              onClick={() => { setMobileOpen(false); openAuthModal("login"); }}
+              className="flex items-center gap-3 text-sm uppercase tracking-[0.18em] text-foreground/75 hover:text-foreground transition-colors w-full text-left"
+            >
+              <div className="relative flex items-center justify-center">
+                <UserCircle2 className="h-4.5 w-4.5" />
+                {user && <span className="navbar-user-dot" />}
+              </div>
+              <span>{user ? "My Account" : "Sign In / Register"}</span>
+            </button>
           </div>
         </div>
-      )}
+      </div>
 
-      {/* Search Overlay */}
+      {/* ── Search Overlay ── */}
       {searchOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-md transition-all duration-300">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background/95 backdrop-blur-md">
           <button
             onClick={() => setSearchOpen(false)}
             className="absolute top-6 right-6 p-2 text-foreground/75 hover:text-foreground transition-colors cursor-pointer"
@@ -219,6 +282,6 @@ export function Navbar() {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
