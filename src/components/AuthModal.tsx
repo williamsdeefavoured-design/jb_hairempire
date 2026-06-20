@@ -191,9 +191,7 @@ export function AuthModal() {
       {/* Backdrop */}
       <div
         className="auth-backdrop"
-        onClick={() => {
-          if (user) closeAuthModal();
-        }}
+        onClick={closeAuthModal}
         aria-hidden="true"
       />
 
@@ -205,11 +203,9 @@ export function AuthModal() {
         aria-label={user ? "Account" : tab === "login" ? "Sign in" : "Create account"}
       >
         {/* Close */}
-        {user && (
-          <button className="auth-close" onClick={closeAuthModal} aria-label="Close">
-            <X size={18} />
-          </button>
-        )}
+        <button className="auth-close" onClick={closeAuthModal} aria-label="Close">
+          <X size={18} />
+        </button>
 
         {/* ── Logged-in state ── */}
         {user ? (

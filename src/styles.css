@@ -149,7 +149,9 @@
   box-shadow: 0 32px 80px oklch(0.18 0.01 60 / 0.18), 0 4px 16px oklch(0.18 0.01 60 / 0.08);
   animation: auth-modal-in 0.3s cubic-bezier(.2,.7,.2,1) both;
   overflow-y: auto;
-  max-height: 96vh;
+  /* dvh accounts for iOS dynamic viewport (keyboard shrinking the screen) */
+  max-height: 90dvh;
+  -webkit-overflow-scrolling: touch;
 }
 
 @keyframes auth-modal-in {
@@ -291,7 +293,8 @@
 .auth-input {
   flex: 1;
   padding: 1.3rem 0.875rem 0.45rem;
-  font-size: 0.875rem;
+  /* 16px minimum prevents iOS Safari from auto-zooming on focus */
+  font-size: 16px;
   color: var(--foreground);
   background: transparent;
   border: none;
