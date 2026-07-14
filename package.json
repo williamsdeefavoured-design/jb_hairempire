@@ -101,5 +101,14 @@
   "sideEffects": false,
   "optionalDependencies": {
     "lightningcss-win32-x64-msvc": "^1.32.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/williamsdeefavoured-design/jb_hairempire.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/williamsdeefavoured-design/jb_hairempire/issues"
+  },
+  "homepage": "https://github.com/williamsdeefavoured-design/jb_hairempire#readme"
 }

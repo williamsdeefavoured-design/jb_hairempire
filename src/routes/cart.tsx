@@ -52,11 +52,10 @@ export const Route = createFileRoute("/cart")({
   component: CartPage,
   head: () => ({
     meta: [
-      { title: "Your Bag · JB HAIRMPIRE" },
+      { title: "Your Bag" },
       {
         name: "description",
-        content:
-          "Review your wig selections and securely complete checkout with Paystack.",
+        content: "Review your wig selections and securely complete checkout with Paystack.",
       },
     ],
   }),
@@ -146,8 +145,7 @@ function CartPage() {
         <CheckCircle2 className="h-12 w-12 mx-auto text-foreground" strokeWidth={1} />
         <h1 className="mt-6 text-3xl font-serif">Thank you for your order</h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          Payment confirmed. Reference:{" "}
-          <span className="font-mono text-foreground">{success}</span>
+          Payment confirmed. Reference: <span className="font-mono text-foreground">{success}</span>
         </p>
         <p className="mt-2 text-sm text-muted-foreground">
           A confirmation has been sent to {email}.
@@ -180,10 +178,7 @@ function CartPage() {
         <div className="grid md:grid-cols-3 gap-12">
           <div className="md:col-span-2 space-y-6">
             {items.map((i) => (
-              <div
-                key={i.product.id}
-                className="flex gap-5 pb-6 border-b border-border/60"
-              >
+              <div key={i.product.id} className="flex gap-5 pb-6 border-b border-border/60">
                 <div className="w-28 h-36 bg-cream overflow-hidden shrink-0">
                   <img
                     src={i.product.image}
@@ -200,9 +195,7 @@ function CartPage() {
                     >
                       {i.product.name}
                     </Link>
-                    <span className="text-sm">
-                      {formatNGN(i.product.price * i.quantity)}
-                    </span>
+                    <span className="text-sm">{formatNGN(i.product.price * i.quantity)}</span>
                   </div>
                   <span className="text-xs text-muted-foreground capitalize mt-1">
                     {i.product.category}
@@ -268,9 +261,7 @@ function CartPage() {
                 />
               </div>
 
-              {error && (
-                <p className="text-xs text-destructive">{error}</p>
-              )}
+              {error && <p className="text-xs text-destructive">{error}</p>}
 
               <button
                 onClick={handlePay}

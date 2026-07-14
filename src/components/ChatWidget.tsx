@@ -6,8 +6,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 const STORAGE_KEY = "jb-hairmpire-widget-chat-v1";
 const WELCOME: Msg = {
   role: "assistant",
-  content:
-    "Welcome to JB HAIRMPIRE. I'm your assistant — ask me about wigs, lengths, care, or styling.",
+  content: "Welcome! I'm your hair assistant — ask me about wigs, lengths, care, or styling.",
 };
 
 export function ChatWidget() {
@@ -78,8 +77,9 @@ export function ChatWidget() {
         <div className="fixed bottom-24 right-6 z-50 w-[calc(100vw-3rem)] sm:w-96 h-128 bg-background border border-border shadow-2xl rounded-lg flex flex-col overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/40">
             <div>
-              <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">Assistant</p>
-              <p className="font-display text-base leading-tight">JB HAIRMPIRE</p>
+              <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                Hair Assistant
+              </p>
             </div>
             <button
               onClick={clearChat}

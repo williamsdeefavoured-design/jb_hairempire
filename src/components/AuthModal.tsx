@@ -88,21 +88,34 @@ export function AuthModal() {
   const [signupPassword, setSignupPassword] = React.useState("");
   const [signupConfirm, setSignupConfirm] = React.useState("");
   const [signupErrors, setSignupErrors] = React.useState<{
-    name?: string; email?: string; password?: string; confirm?: string;
+    name?: string;
+    email?: string;
+    password?: string;
+    confirm?: string;
   }>({});
 
   // Sync tab when prop changes
-  React.useEffect(() => { setTab(authModalTab); }, [authModalTab]);
+  React.useEffect(() => {
+    setTab(authModalTab);
+  }, [authModalTab]);
 
   // Reset state on close
   React.useEffect(() => {
     if (!authModalOpen) {
       setTimeout(() => {
-        setLoginEmail(""); setLoginPassword("");
-        setSignupName(""); setSignupEmail(""); setSignupPassword(""); setSignupConfirm("");
-        setLoginErrors({}); setSignupErrors({});
-        setGlobalError(null); setSuccess(null); setLoading(false);
-        setForgotMode(false); setForgotLoading(false);
+        setLoginEmail("");
+        setLoginPassword("");
+        setSignupName("");
+        setSignupEmail("");
+        setSignupPassword("");
+        setSignupConfirm("");
+        setLoginErrors({});
+        setSignupErrors({});
+        setGlobalError(null);
+        setSuccess(null);
+        setLoading(false);
+        setForgotMode(false);
+        setForgotLoading(false);
       }, 300);
     }
   }, [authModalOpen]);
@@ -110,7 +123,9 @@ export function AuthModal() {
   // Trap focus & close on Escape (only if user is logged in)
   React.useEffect(() => {
     if (!authModalOpen || !user) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") closeAuthModal(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeAuthModal();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [authModalOpen, closeAuthModal, user]);
@@ -146,7 +161,10 @@ export function AuthModal() {
     setLoading(true);
     const { error } = await signIn(loginEmail, loginPassword);
     setLoading(false);
-    if (error) { setGlobalError(error); return; }
+    if (error) {
+      setGlobalError(error);
+      return;
+    }
     setSuccess("Welcome back! You're now signed in.");
     setTimeout(() => closeAuthModal(), 1500);
   }
@@ -158,7 +176,10 @@ export function AuthModal() {
     setLoading(true);
     const { error } = await signUp(signupEmail, signupPassword, signupName);
     setLoading(false);
-    if (error) { setGlobalError(error); return; }
+    if (error) {
+      setGlobalError(error);
+      return;
+    }
     setSuccess("Account created! Please check your email to confirm your account.");
   }
 
@@ -174,7 +195,10 @@ export function AuthModal() {
       redirectTo: window.location.origin + "/reset-password",
     });
     setForgotLoading(false);
-    if (error) { setGlobalError(error.message); return; }
+    if (error) {
+      setGlobalError(error.message);
+      return;
+    }
     setSuccess("Password reset email sent! Check your inbox.");
     setForgotMode(false);
   }
@@ -189,11 +213,7 @@ export function AuthModal() {
   return (
     <>
       {/* Backdrop */}
-      <div
-        className="auth-backdrop"
-        onClick={closeAuthModal}
-        aria-hidden="true"
-      />
+      <div className="auth-backdrop" onClick={closeAuthModal} aria-hidden="true" />
 
       {/* Modal */}
       <div
@@ -212,11 +232,10 @@ export function AuthModal() {
           <div className="auth-logged-in">
             <div className="auth-avatar">
               {user.user_metadata?.full_name?.[0]?.toUpperCase() ||
-               user.email?.[0]?.toUpperCase() || "U"}
+                user.email?.[0]?.toUpperCase() ||
+                "U"}
             </div>
-            <h2 className="auth-heading">
-              {user.user_metadata?.full_name || "Welcome back"}
-            </h2>
+            <h2 className="auth-heading">{user.user_metadata?.full_name || "Welcome back"}</h2>
             <p className="auth-sub">{user.email}</p>
             <div className="auth-divider" />
             <button className="auth-btn-outline" onClick={handleSignOut}>
@@ -234,7 +253,7 @@ export function AuthModal() {
               <p className="auth-sub">
                 {tab === "login"
                   ? "Sign in to access your wishlist, orders, and more."
-                  : "Join JB Hairmpire for exclusive access and offers."}
+                  : "Join for exclusive access and offers."}
               </p>
             </div>
 
@@ -244,7 +263,11 @@ export function AuthModal() {
                 role="tab"
                 aria-selected={tab === "login"}
                 className={`auth-tab ${tab === "login" ? "auth-tab--active" : ""}`}
-                onClick={() => { setTab("login"); setGlobalError(null); setSuccess(null); }}
+                onClick={() => {
+                  setTab("login");
+                  setGlobalError(null);
+                  setSuccess(null);
+                }}
               >
                 Sign In
               </button>
@@ -252,7 +275,11 @@ export function AuthModal() {
                 role="tab"
                 aria-selected={tab === "signup"}
                 className={`auth-tab ${tab === "signup" ? "auth-tab--active" : ""}`}
-                onClick={() => { setTab("signup"); setGlobalError(null); setSuccess(null); }}
+                onClick={() => {
+                  setTab("signup");
+                  setGlobalError(null);
+                  setSuccess(null);
+                }}
               >
                 Sign Up
               </button>
@@ -304,7 +331,11 @@ export function AuthModal() {
                   <button
                     type="button"
                     className="auth-forgot-link"
-                    onClick={() => { setForgotMode(true); setGlobalError(null); setLoginErrors({}); }}
+                    onClick={() => {
+                      setForgotMode(true);
+                      setGlobalError(null);
+                      setLoginErrors({});
+                    }}
                   >
                     Forgot password?
                   </button>
@@ -315,7 +346,9 @@ export function AuthModal() {
                 </button>
                 <p className="auth-switch">
                   Don't have an account?{" "}
-                  <button type="button" onClick={() => setTab("signup")}>Create one</button>
+                  <button type="button" onClick={() => setTab("signup")}>
+                    Create one
+                  </button>
                 </p>
               </form>
             )}
@@ -341,7 +374,13 @@ export function AuthModal() {
                   {forgotLoading ? "Sending…" : "Send Reset Link"}
                 </button>
                 <p className="auth-switch">
-                  <button type="button" onClick={() => { setForgotMode(false); setLoginErrors({}); }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForgotMode(false);
+                      setLoginErrors({});
+                    }}
+                  >
                     ← Back to sign in
                   </button>
                 </p>
@@ -396,7 +435,9 @@ export function AuthModal() {
                 </button>
                 <p className="auth-switch">
                   Already have an account?{" "}
-                  <button type="button" onClick={() => setTab("login")}>Sign in</button>
+                  <button type="button" onClick={() => setTab("login")}>
+                    Sign in
+                  </button>
                 </p>
               </form>
             )}

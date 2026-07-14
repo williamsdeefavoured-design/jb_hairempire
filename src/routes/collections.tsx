@@ -8,8 +8,12 @@ import wig5 from "@/wigs/wig 5.jpg";
 export const Route = createFileRoute("/collections")({
   head: () => ({
     meta: [
-      { title: "Collections — JB HAIRMPIRE" },
-      { name: "description", content: "Discover the JB HAIRMPIRE collections — wigs, equipment and treatments curated for the modern woman." },
+      { title: "Collections" },
+      {
+        name: "description",
+        content:
+          "Discover our collections — wigs, equipment and treatments curated for the modern woman.",
+      },
     ],
   }),
   component: Collections,
@@ -72,8 +76,17 @@ function Collections() {
               i % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""
             }`}
           >
-            <Link to="/shop" search={c.search} className="block aspect-[4/5] overflow-hidden bg-cream hover-zoom">
-              <img src={c.image} alt={c.title} loading="lazy" className="w-full h-full object-cover" />
+            <Link
+              to="/shop"
+              search={c.search}
+              className="block aspect-[4/5] overflow-hidden bg-cream hover-zoom"
+            >
+              <img
+                src={c.image}
+                alt={c.title}
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
             </Link>
             <div>
               <span className="text-[11px] uppercase tracking-[0.35em] text-muted-foreground">

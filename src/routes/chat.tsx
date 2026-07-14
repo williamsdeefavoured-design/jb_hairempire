@@ -8,19 +8,19 @@ const STORAGE_KEY = "jb-hairmpire-chat-v1";
 const WELCOME: Msg = {
   role: "assistant",
   content:
-    "Welcome to JB HAIRMPIRE. I'm your personal hair assistant — here to help you find the perfect wig, recommend treatments, or answer any questions about our luxury collection. How may I assist you today?",
+    "Welcome! I'm your personal hair assistant — here to help you find the perfect wig, recommend treatments, or answer any questions about our collection. How may I assist you today?",
 };
 
 export const Route = createFileRoute("/chat")({
   head: () => ({
     meta: [
-      { title: "Hair Assitant — JB HAIRMPIRE" },
+      { title: "Hair Assistant" },
       {
         name: "description",
         content:
-          "Chat with the JB HAIRMPIRE hair assistant for personalized wig recommendations, styling tips and product advice.",
+          "Chat with our hair assistant for personalized wig recommendations, styling tips and product advice.",
       },
-      { property: "og:title", content: "Hair Assistant — JB HAIRMPIRE" },
+      { property: "og:title", content: "Hair Assistant" },
       {
         property: "og:description",
         content: "Personal AI-powered hair advisor for luxury wigs and treatments.",
@@ -112,7 +112,8 @@ function ChatPage() {
           </div>
           <h1 className="font-display text-4xl md:text-5xl mt-4">Hair assistant</h1>
           <p className="text-sm text-muted-foreground mt-3 max-w-lg mx-auto">
-            Ask for wig recommendations, styling advice, treatment guidance — your personal hair advisor, available anytime.
+            Ask for wig recommendations, styling advice, treatment guidance — your personal hair
+            advisor, available anytime.
           </p>
         </div>
 
@@ -127,9 +128,15 @@ function ChatPage() {
               <div className="flex gap-2 text-xs uppercase tracking-[0.25em] text-muted-foreground">
                 <span className="animate-pulse">Thinking</span>
                 <span className="inline-flex gap-0.5">
-                  <span className="animate-bounce" style={{ animationDelay: "0ms" }}>.</span>
-                  <span className="animate-bounce" style={{ animationDelay: "120ms" }}>.</span>
-                  <span className="animate-bounce" style={{ animationDelay: "240ms" }}>.</span>
+                  <span className="animate-bounce" style={{ animationDelay: "0ms" }}>
+                    .
+                  </span>
+                  <span className="animate-bounce" style={{ animationDelay: "120ms" }}>
+                    .
+                  </span>
+                  <span className="animate-bounce" style={{ animationDelay: "240ms" }}>
+                    .
+                  </span>
                 </span>
               </div>
             )}

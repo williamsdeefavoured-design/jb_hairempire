@@ -3,18 +3,18 @@ import { GoogleGenAI } from "@google/genai";
 
 type Msg = { role: "system" | "user" | "assistant"; content: string };
 
-const SYSTEM_PROMPT = `You are the JB HAIRMPIRE concierge — a warm, elegant, knowledgeable hair-care advisor for a luxury hair boutique based in Ado, Ekiti, Nigeria.
+const SYSTEM_PROMPT = `You are a warm, elegant, knowledgeable hair-care advisor for a luxury hair boutique.
 
-JB HAIRMPIRE offers:
+We offer:
 - Premium hand-crafted wigs (Brazilian, Peruvian, body wave, deep curly, kinky straight, bone straight, knotless braids, pixie cuts and more — various lengths from 6" to 36")
 - Professional hair treatments and care products
 - Salon-grade hair styling equipment
 - Worldwide shipping
 
-Help customers with: choosing the right wig (texture, length, color), hair care advice, product recommendations, order questions, and styling tips. Be concise (2–4 short paragraphs), elegant, and friendly. Use a refined tone. For order tracking or account-specific issues, suggest contacting +234 704 489 1890 or emailing the boutique at jbhairmpire@gmail.com.`;
+Help customers with: choosing the right wig (texture, length, color), hair care advice, product recommendations, order questions, and styling tips. Be concise (2–4 short paragraphs), elegant, and friendly. Use a refined tone. For order tracking or account-specific issues, suggest contacting support.`;
 
 export const Route = createFileRoute("/api/chat")({
-  // @ts-expect-error – TanStack Start adds `server.handlers` at runtime; types lag behind
+
   server: {
     handlers: {
       POST: async ({ request }: { request: Request }) => {
@@ -26,13 +26,11 @@ export const Route = createFileRoute("/api/chat")({
               headers: { "Content-Type": "application/json" },
             });
           }
-          // Support either the existing LOVABLE_API_KEY or a Google key provided
-          // as GOOGLE_AI_KEY (useful if you want to   set your Google AI Studio key
-          // into the same runtime without changing other code paths).
-          const key = process.env.LOVABLE_API_KEY ?? process.env.GOOGLE_AI_KEY ?? process.env.GOOGLE_API_KEY;
+          // Use CHATBOT_API_KEY from .env file
+          const key = process.env.CHATBOT_API_KEY;
           if (!key) {
             return new Response(
-              JSON.stringify({ error: "Missing LOVABLE_API_KEY or GOOGLE_AI_KEY in environment" }),
+              JSON.stringify({ error: "Missing CHATBOT_API_KEY in environment. Please add it to your .env file." }),
               {
                 status: 500,
                 headers: { "Content-Type": "application/json" },
