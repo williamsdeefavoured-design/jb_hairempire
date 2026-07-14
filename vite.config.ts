@@ -15,4 +15,27 @@ export default defineConfig({
   nitro: {
     preset: process.env.VERCEL ? "vercel" : "cloudflare-module",
   },
+  // Additional Vite rollup options to reduce noisy warnings and improve chunking on Vercel
+  vite: {
+    build: {
+      // Raise the chunk size warning limit to avoid noisy warnings for large bundles
+      chunkSizeWarningLimit: 2000,
+      rollupOptions: {
+        // Create a simple vendor chunk for node_modules to improve chunking
+        output: {
+          manualChunks(id: string) {
+            if (id.includes('node_modules')) return 'vendor';
+          },
+        },
+        // Silence specific unused-external-import warnings coming from TanStack packages
+        onwarn(warning, warn) {
+          // Rollup uses code 'UNUSED_EXTERNAL_IMPORT' for these warnings
+          if (warning && warning.code === 'UNUSED_EXTERNAL_IMPORT' && /@tanstack\//.test(warning.message || '')) {
+            return;
+          }
+          warn(warning);
+        },
+      },
+    },
+  },
 });
